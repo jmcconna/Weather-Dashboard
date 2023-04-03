@@ -25,7 +25,7 @@ fetch(queryURL)
     console.log('Weather data for '+city);
     console.log(data);
     let unix_timestamp = data.dt;
-    var date = new Date(unix_timestamp *1000).toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"long", day:"numeric", hour:"2-digit"});
+    var date = new Date(unix_timestamp *1000).toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"long", day:"numeric"});
     //var formattedDate = date.getDate();
     
     weatherToday.children[0].textContent = data.name;
@@ -66,21 +66,33 @@ fetch(fiveDayqueryURL)
     var date2 = new Date(unix_timestamp2 *1000).toLocaleDateString('en-us', { weekday:"short", month:"numeric", day:"numeric"});
     console.log(date2);
     fiveDayForecast.children[1].children[0].textContent = date2;
+    fiveDayForecast.children[1].children[1].textContent = "Temp: "+data.list[14].main.temp+" °F";
+    fiveDayForecast.children[1].children[2].textContent = "Wind: "+data.list[14].wind.speed +" mph";
+    fiveDayForecast.children[1].children[3].textContent = "Humidity: "+data.list[14].main.humidity+"%";
 
     let unix_timestamp3 = data.list[22].dt;
     var date3 = new Date(unix_timestamp3 *1000).toLocaleDateString('en-us', { weekday:"short", month:"numeric", day:"numeric"});
     console.log(date3);
     fiveDayForecast.children[2].children[0].textContent = date3;
+    fiveDayForecast.children[2].children[1].textContent = "Temp: "+data.list[22].main.temp+" °F";
+    fiveDayForecast.children[2].children[2].textContent = "Wind: "+data.list[22].wind.speed +" mph";
+    fiveDayForecast.children[2].children[3].textContent = "Humidity: "+data.list[22].main.humidity+"%";
 
     let unix_timestamp4 = data.list[30].dt;
     var date4 = new Date(unix_timestamp4 *1000).toLocaleDateString('en-us', { weekday:"short", month:"numeric", day:"numeric"});
     console.log(date4);
     fiveDayForecast.children[3].children[0].textContent = date4;
+    fiveDayForecast.children[3].children[1].textContent = "Temp: "+data.list[30].main.temp+" °F";
+    fiveDayForecast.children[3].children[2].textContent = "Wind: "+data.list[30].wind.speed +" mph";
+    fiveDayForecast.children[3].children[3].textContent = "Humidity: "+data.list[30].main.humidity+"%";
 
     let unix_timestamp5 = data.list[38].dt;
     var date5 = new Date(unix_timestamp5 *1000).toLocaleDateString('en-us', { weekday:"short", month:"numeric", day:"numeric"});
     console.log(date5);
     fiveDayForecast.children[4].children[0].textContent = date5;
+    fiveDayForecast.children[4].children[1].textContent = "Temp: "+data.list[38].main.temp+" °F";
+    fiveDayForecast.children[4].children[2].textContent = "Wind: "+data.list[38].wind.speed +" mph";
+    fiveDayForecast.children[4].children[3].textContent = "Humidity: "+data.list[38].main.humidity+"%";
 
 }
 )
