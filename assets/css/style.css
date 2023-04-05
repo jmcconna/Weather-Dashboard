@@ -1,9 +1,13 @@
 header {
-    background-color: aqua;
+    background-color: #0D6EFD;
+	height: 7vh;
 }
 
 #headline {
 	margin-left: 10%;
+	padding:10px;
+	text-align: justify;
+	color:white;
 }
 
 .btn-primary.raised {
@@ -14,6 +18,7 @@ header {
 .greyed {
 	box-shadow: 0 3px 0 0 grey;
 	background: #1f1f1fa4;
+	border-color: grey;
     width: 100%;
 	margin-top: 15px;
 }
@@ -41,4 +46,8 @@ header {
 
 #buttonColumn {
 	justify-content: space-around;
+}
+
+#icon {
+	display:inline-block;
 }

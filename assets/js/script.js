@@ -1,11 +1,12 @@
 var APIkey = "d836aceed21f5a7a366ca28c985b1c82";
 var APIkey2 = "92fda5835042abcdaf25203fe3fe8041";
 
-var city = "atlanta";
+var city = "Orlando";
 var state;
 var country;
 var lat;
 var lon;
+var oldCityButtons =["Orlando"];
 
 var weatherToday = document.getElementById("weatherToday");
 var fiveDayForecast = document.getElementById("fiveDayForecast");
@@ -18,6 +19,13 @@ function queryOpenWeather(){
 var queryURL = "https://api.openweathermap.org/data/2.5/weather?q="+city+"&appid="+APIkey+"&units=imperial";
 fetch(queryURL)
 .then(function (response) {
+//if they type in a location name (or random string) that doesn't work with the openweather API
+    if(response.status !==200){
+     alert("Sorry! We couldn't find a city by that name. Please try entering the name of the city again.");
+     return;   
+} else if (response.status === 200)
+{createNewButton();}
+
  return response.json();
 })
 .then(function(data){
@@ -27,7 +35,7 @@ fetch(queryURL)
     var date = new Date(unix_timestamp *1000).toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"long", day:"numeric"});
     //retrieve and decode the weather icon
     var iconCode = data.weather[0].icon;
-    var iconElement = "<img src='https://openweathermap.org/img/wn/"+iconCode+".png' alt='Weather Icon'>";
+    var iconElement = "<img src='https://openweathermap.org/img/wn/"+iconCode+"@2x.png' alt='Weather Icon'>";
 
     //assign all the data to DOM elements
     weatherToday.children[0].textContent = data.name;
@@ -116,42 +124,44 @@ event.preventDefault();
 console.log(locationTextInput.value);
 city = locationTextInput.value;
 
-//retrieve "lastCity" from local storage and create a grey button
-var lastCity = JSON.parse(localStorage.getItem("lastCity"));
-console.log(lastCity);
-if(lastCity !== null) {
-    createNewButton(lastCity);
-}
 
-//put city in local storage as "lastCity"
-localStorage.setItem("lastCity",JSON.stringify(city));
 
-console.log(city);
 queryOpenWeather();
 fiveDayQueryOpenWeather();
 });
 
-function createNewButton(cityName) {
 
+function createNewButton() {
+
+//check if we have already added this city to the list before
+if(oldCityButtons.includes(city)) {
+    console.log("Duplicate city");
+    return;}
+
+//retrieve "lastCity" from local storage and create a grey button
+var lastCity = JSON.parse(localStorage.getItem("lastCity"));
+if(lastCity !== null) {   
 //create new button
 var newButton = document.createElement("button");
 newButton.classList.add("btn-primary");
 newButton.classList.add("btn");
 //newButton.classList.add("raised");
 newButton.classList.add("greyed");
-
 //assign the city name as the value for the button
-newButton.innerText = cityName;
-
+newButton.innerText = lastCity;
 //add an event listener
 newButton.addEventListener('click', () => {
-city = cityName;
+city = lastCity;
 queryOpenWeather();
 })
-
 //append the new button to the parent DOM
 buttonColumn.appendChild(newButton);
+}
+//update the local storage to put the current city as "lastCity"
+localStorage.setItem("lastCity",JSON.stringify(city));
 
+//add the city to the array of old cities 
+oldCityButtons.push(city);
 }
 
 queryOpenWeather();
