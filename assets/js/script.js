@@ -9,12 +9,11 @@ var lon;
 
 var weatherToday = document.getElementById("weatherToday");
 var fiveDayForecast = document.getElementById("fiveDayForecast");
-
 var locationTextInput = document.getElementById("weatherLocation");
-console.log(locationTextInput);
 var submitButton = document.getElementById("submitBut");
-console.log(submitButton);
+var buttonColumn = document.getElementById("buttonColumn");
 
+//query the open weather database for the current day's weather
 function queryOpenWeather(){
 var queryURL = "https://api.openweathermap.org/data/2.5/weather?q="+city+"&appid="+APIkey+"&units=imperial";
 fetch(queryURL)
@@ -22,27 +21,24 @@ fetch(queryURL)
  return response.json();
 })
 .then(function(data){
-    console.log('Weather data for '+city);
-    console.log(data);
+   
+    //format the date
     let unix_timestamp = data.dt;
     var date = new Date(unix_timestamp *1000).toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"long", day:"numeric"});
-    //var formattedDate = date.getDate();
+    //retrieve and decode the weather icon
     var iconCode = data.weather[0].icon;
-    console.log(iconCode);
     var iconElement = "<img src='https://openweathermap.org/img/wn/"+iconCode+".png' alt='Weather Icon'>";
-    
-    console.log(weatherToday.children[2].children[0]);
 
+    //assign all the data to DOM elements
     weatherToday.children[0].textContent = data.name;
     weatherToday.children[1].textContent = date;
     weatherToday.children[2].innerHTML=iconElement;
     weatherToday.children[3].textContent = "Temp: " +data.main.temp +" °F";
     weatherToday.children[4].textContent = "Wind: "+data.wind.speed +" mph";
     weatherToday.children[5].textContent = "Humidity: "+data.main.humidity +"%";
+    //grad the lat and lon coordinates for the city to pass to a second query for 5-day weather
     lat = data.coord.lat;
-    console.log(lat);
     lon = data.coord.lon;
-    console.log(lon);
     fiveDayQueryOpenWeather();
 })
 }
@@ -57,9 +53,8 @@ fetch(fiveDayqueryURL)
    })
 
 .then(function(data){
-    console.log('5 day Weather data for '+city);
-    console.log(data);
-
+    
+    //grab the data for each of the 5 days and assign the values to the DOM elements
     let unix_timestamp1 = data.list[6].dt;
     var date1 = new Date(unix_timestamp1 *1000).toLocaleDateString('en-us', { weekday:"short", month:"numeric", day:"numeric"});
     var iconCode1 = data.list[6].weather[0].icon;
@@ -115,15 +110,49 @@ fetch(fiveDayqueryURL)
 }
 
 
-
+//event listener added here for the submit button, which also triggers local storage
 submitButton.addEventListener("click", function() {
 event.preventDefault();
 console.log(locationTextInput.value);
 city = locationTextInput.value;
+
+//retrieve "lastCity" from local storage and create a grey button
+var lastCity = JSON.parse(localStorage.getItem("lastCity"));
+console.log(lastCity);
+if(lastCity !== null) {
+    createNewButton(lastCity);
+}
+
+//put city in local storage as "lastCity"
+localStorage.setItem("lastCity",JSON.stringify(city));
+
 console.log(city);
 queryOpenWeather();
 fiveDayQueryOpenWeather();
 });
+
+function createNewButton(cityName) {
+
+//create new button
+var newButton = document.createElement("button");
+newButton.classList.add("btn-primary");
+newButton.classList.add("btn");
+//newButton.classList.add("raised");
+newButton.classList.add("greyed");
+
+//assign the city name as the value for the button
+newButton.innerText = cityName;
+
+//add an event listener
+newButton.addEventListener('click', () => {
+city = cityName;
+queryOpenWeather();
+})
+
+//append the new button to the parent DOM
+buttonColumn.appendChild(newButton);
+
+}
 
 queryOpenWeather();
 
