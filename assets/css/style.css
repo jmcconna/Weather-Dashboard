@@ -2,6 +2,10 @@ header {
     background-color: aqua;
 }
 
+#headline {
+	margin-left: 10%;
+}
+
 .btn-primary.raised {
 	box-shadow: 0 3px 0 0 #007299;
     width: 100%;
@@ -11,6 +15,12 @@ header {
 	background: #33a6cc;
 	box-shadow: none;
 	margin-bottom: -3px;
-	margin-top: 3px;
-    
+	margin-top: 3px;   
+}
+
+#weatherToday {
+	border-style: solid;
+	border-radius: 10px;
+	border-color: black;
+	margin: 20px;
 }
